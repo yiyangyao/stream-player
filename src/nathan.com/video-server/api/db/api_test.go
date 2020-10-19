@@ -1,7 +1,10 @@
 package db
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
+	"time"
 )
 
 func clearTables() {
@@ -103,12 +106,28 @@ func TestRegetVideo(t *testing.T) {
 func TestComments(t *testing.T) {
 	clearTables()
 	t.Run("adduser", TestAddUserCredential)
-	t.Run("addcomments", TestAddComments)
+	t.Run("addcomments", TestAddNewComment)
 	t.Run("listcomments", TestListComments)
 }
 
 func TestAddNewComment(t *testing.T) {
 	vid := 12121212
 	aid := 1
-	co
+	content := "i like this video"
+	if err := AddNewComment(vid, aid, content); err != nil {
+		t.Errorf("%v", err)
+	}
+}
+
+func TestListComments(t *testing.T) {
+	vid := 12121212
+	from := 1514764800
+	to, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
+	res, err := listComments(vid, from, to)
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+	for i, element := range res {
+		fmt.Printf("conment: %d, %v \n", i, element)
+	}
 }
