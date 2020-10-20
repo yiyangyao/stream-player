@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users(
   modify_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 
   primary key(id),
-  unique key(login_name),
+  unique key(login_name)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户信息';
 
 CREATE TABLE IF NOT EXISTS videos(
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS videos(
   modify_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 
   primary key(id),
-  unique key(vname),
+  unique key(vname)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频信息';
 
 CREATE TABLE IF NOT EXISTS comments(
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS comments(
   create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   modify_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 
-  primary key(id),
+  primary key(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户评论信息';
 
 CREATE TABLE IF NOT EXISTS sessions(
@@ -42,5 +42,5 @@ CREATE TABLE IF NOT EXISTS sessions(
   create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   modify_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 
-  primary key(session_id),
+  primary key(session_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='session信息';
