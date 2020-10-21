@@ -3,10 +3,10 @@ package trie
 import "strings"
 
 type Node struct {
-	Pattern  string
-	part     string
-	children []*Node
-	isWild   bool
+	Pattern  string  // 待匹配路由，例如 /p/:lang
+	part     string  // 路由中的一部分，例如 :lang
+	children []*Node // 子节点，例如 [doc, tutorial, intro]
+	isWild   bool    // 是否精确匹配，part 含有 : 或 * 时为true
 }
 
 func (n *Node) matchChild(part string) *Node {

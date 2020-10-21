@@ -7,6 +7,11 @@ import (
 
 type H map[string]interface{}
 
+/**
+一个web请求->根据*http.Request构造一个http.ResponseWriter进行返回，构造Context对用户的请求和返回进行封装：
+- 剥离出请求中的Path和Method，以及请求中携带的Params
+- 对返回体的 StatusCode 和 Content-Type 进行封装，实现对不同类型结构的返回
+*/
 type Context struct {
 	Response     http.ResponseWriter
 	Request      *http.Request
@@ -52,7 +57,7 @@ func (c *Context) SetHeader(key string, value string) {
 func (c *Context) String(code int, data string) {
 	c.SetHeader("Content-Type", "text/plain")
 	c.Status(code)
-	c.Response.Write([]byte(data))
+	_, _ = c.Response.Write([]byte(data))
 }
 
 func (c *Context) Json(code int, object interface{}) {
@@ -67,7 +72,12 @@ func (c *Context) Json(code int, object interface{}) {
 func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
-	c.Response.Write([]byte(html))
+	_, _ = c.Response.Write([]byte(html))
+}
+
+func (c *Context) Fail(code int, err string) {
+	c.index = len(c.handlers) - 1
+	c.Json(code, H{"message": err})
 }
 
 // aspect
@@ -76,9 +86,4 @@ func (c *Context) Next() {
 	for ; c.index < len(c.handlers); c.index++ {
 		c.handlers[c.index](c)
 	}
-}
-
-func (c *Context) Fail(code int, err string) {
-	c.index = len(c.handlers) - 1
-	c.Json(code, H{"message": err})
 }
