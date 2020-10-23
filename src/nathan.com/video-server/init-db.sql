@@ -44,3 +44,14 @@ CREATE TABLE IF NOT EXISTS sessions(
 
   primary key(session_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='session信息';
+
+CREATE TABLE IF NOT EXISTS video_del_rec(
+  id int unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  video_id bigint COMMENT 'video id',
+
+  create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  modify_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+
+  primary key(id),
+  unique key(video_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='待删除的视频信息';
