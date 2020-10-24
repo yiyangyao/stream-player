@@ -14,7 +14,7 @@ func main() {
 	{
 		streamGroup.GET("/videos/:video-name", streamHandler)
 		streamGroup.POST("/upload/:video-name", uploadHandler)
-		streamGroup.GET("/testpage", uploadPageHandler)
+		streamGroup.GET("/upload-page", uploadPageHandler)
 	}
 
 	app.Run(":9999")
