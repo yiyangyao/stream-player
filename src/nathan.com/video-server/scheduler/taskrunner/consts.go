@@ -9,3 +9,5 @@ const (
 	READY_TO_EXECUTE  string = "e"
 	CLOSE             string = "c"
 )
+
+const LOAD_VIDEO_RECORD_BUFFER int = 10

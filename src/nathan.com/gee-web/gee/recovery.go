@@ -35,7 +35,7 @@ func Recovery() HandlerFunc {
 			if err := recover(); err != nil {
 				message := fmt.Sprintf("%s", err)
 				log.Printf("%s\n\n", trace(message))
-				c.Fail(http.StatusInternalServerError, "Internal Server Error")
+				c.Fail(http.StatusInternalServerError, "Internal Server SendErrorResponse")
 			}
 		}()
 

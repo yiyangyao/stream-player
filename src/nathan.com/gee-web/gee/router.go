@@ -109,7 +109,7 @@ func (r *Router) handler(c *Context) {
 	} else {
 		c.handlers = append(c.handlers, func(c *Context) {
 			data := fmt.Sprintf("404 NOT FOUND: %s\n", c.Path)
-			c.String(404, data)
+			c.SendStringResponse(404, data)
 		})
 	}
 

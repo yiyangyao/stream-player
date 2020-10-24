@@ -3,7 +3,7 @@ package db
 import "log"
 
 func ReadVideoDeletionRecord(count int) ([]string, error) {
-	stmtOut, err := dbConn.Prepare("select video_name from video_to_be_deleted")
+	stmtOut, err := dbConn.Prepare("select video_name from video_to_be_deleted limit ?")
 
 	var names []string
 

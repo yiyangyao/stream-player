@@ -38,7 +38,7 @@ var (
 	ErrorInternalError = ErrResponse{
 		HttpSC: 500,
 		Error: Err{
-			Error:     "Internal Error",
+			Error:     "Internal SendErrorResponse",
 			ErrorCode: "004",
 		},
 	}

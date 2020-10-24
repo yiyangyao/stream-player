@@ -3,6 +3,8 @@ package gee
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"time"
 )
 
 type H map[string]interface{}
@@ -54,13 +56,13 @@ func (c *Context) SetHeader(key string, value string) {
 	c.Response.Header().Set(key, value)
 }
 
-func (c *Context) String(code int, data string) {
+func (c *Context) SendStringResponse(code int, data string) {
 	c.SetHeader("Content-Type", "text/plain")
 	c.Status(code)
 	_, _ = c.Response.Write([]byte(data))
 }
 
-func (c *Context) Json(code int, object interface{}) {
+func (c *Context) SendJsonResponse(code int, object interface{}) {
 	c.SetHeader("Content-Type", "application/json")
 	c.Status(code)
 	encoder := json.NewEncoder(c.Response)
@@ -69,15 +71,24 @@ func (c *Context) Json(code int, object interface{}) {
 	}
 }
 
-func (c *Context) HTML(code int, html string) {
+func (c *Context) SendHTMLResponse(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
 	_, _ = c.Response.Write([]byte(html))
 }
 
+func (c *Context) SendErrorResponse(code int, errMsg string) {
+	c.SendStringResponse(code, errMsg)
+}
+
+func (c *Context) SendVideoMP4Response(video *os.File) {
+	c.SetHeader("Content-Type", "video/mp4")
+	http.ServeContent(c.Response, c.Request, "", time.Now(), video)
+}
+
 func (c *Context) Fail(code int, err string) {
 	c.index = len(c.handlers) - 1
-	c.Json(code, H{"message": err})
+	c.SendJsonResponse(code, H{"message": err})
 }
 
 // aspect

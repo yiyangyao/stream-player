@@ -30,32 +30,32 @@ func TestUserWorkFlow(t *testing.T) {
 func TestAddUserCredential(t *testing.T) {
 	err := AddUserCredential("nathan", "nathan2012")
 	if err != nil {
-		t.Errorf("Error of AddUser: %v", err)
+		t.Errorf("SendErrorResponse of AddUser: %v", err)
 	}
 }
 
 func TestGetUser(t *testing.T) {
 	passwd, err := getUserCredential("nathan")
 	if passwd != "nathan2012" || err != nil {
-		t.Errorf("Error of GetUser")
+		t.Errorf("SendErrorResponse of GetUser")
 	}
 }
 
 func TestDeleteUser(t *testing.T) {
 	err := deleteUser("nathan", "nathan2012")
 	if err != nil {
-		t.Errorf("Error of DelUser: %v", err)
+		t.Errorf("SendErrorResponse of DelUser: %v", err)
 	}
 }
 
 func TestRegetUser(t *testing.T) {
 	passwd, err := getUserCredential("nathan")
 	if err != nil {
-		t.Errorf("Error of ReGEtUser: %v", err)
+		t.Errorf("SendErrorResponse of ReGEtUser: %v", err)
 	}
 
 	if passwd != "" {
-		t.Errorf("Error of ReGEtUser")
+		t.Errorf("SendErrorResponse of ReGEtUser")
 	}
 }
 
@@ -70,10 +70,10 @@ func TestVideoWorkFlow(t *testing.T) {
 func TestAddNewVideo(t *testing.T) {
 	video, err := AddNewVideo(1, "my-video")
 	if err != nil {
-		t.Errorf("Error of AddUser: %v", err)
+		t.Errorf("SendErrorResponse of AddUser: %v", err)
 	}
 	if video.AuthorId != 1 {
-		t.Errorf("Error of AddUser: %v", video.AuthorId)
+		t.Errorf("SendErrorResponse of AddUser: %v", video.AuthorId)
 	}
 
 }
@@ -81,25 +81,25 @@ func TestAddNewVideo(t *testing.T) {
 func TestGetVideo(t *testing.T) {
 	video, err := GetVideo("my-video")
 	if video == nil || video.AuthorId != 1 || err != nil {
-		t.Errorf("Error of GetUser")
+		t.Errorf("SendErrorResponse of GetUser")
 	}
 }
 
 func TestDeleteVideo(t *testing.T) {
 	err := DeleteVideo("my-video")
 	if err != nil {
-		t.Errorf("Error of DelUser: %v", err)
+		t.Errorf("SendErrorResponse of DelUser: %v", err)
 	}
 }
 
 func TestRegetVideo(t *testing.T) {
 	video, err := GetVideo("my-video")
 	if err != nil {
-		t.Errorf("Error of ReGetUser: %v", err)
+		t.Errorf("SendErrorResponse of ReGetUser: %v", err)
 	}
 
 	if video.AuthorId != 0 {
-		t.Errorf("Error of ReGEtUser: %v", video)
+		t.Errorf("SendErrorResponse of ReGEtUser: %v", video)
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 )
 
 func deleteVideoFile(videoName string) error {
-	if err := os.Remove("./videos/" + videoName); err != nil {
+	if err := os.Remove("/Users/bytedance/stream-server-player/videos/" + videoName); err != nil {
 		log.Printf("delete video file error: %v", err)
 		return err
 	}
@@ -18,17 +18,17 @@ func deleteVideoFile(videoName string) error {
 }
 
 func VideoClearDispatch(dc dataChan) error {
-	res, err := db.ReadVideoDeletionRecord(10)
+	videoNames, err := db.ReadVideoDeletionRecord(LOAD_VIDEO_RECORD_BUFFER)
 	if err != nil {
-		log.Printf("video clear dispatcher err: %v", err)
+		log.Printf("read video deletion record err: %v", err)
 		return err
 	}
 
-	if len(res) == 0 {
+	if len(videoNames) == 0 {
 		return errors.New("all tasks finished")
 	}
 
-	for _, name := range res {
+	for _, name := range videoNames {
 		dc <- name
 	}
 
@@ -38,7 +38,7 @@ func VideoClearDispatch(dc dataChan) error {
 func VideoClearExecutor(dc dataChan) error {
 	errMap := &sync.Map{}
 	var err error
-forloop:
+forLoop:
 	for {
 		select {
 		case videoName := <-dc:
@@ -53,7 +53,7 @@ forloop:
 				}
 			}(videoName)
 		default:
-			break forloop
+			break forLoop
 		}
 	}
 	errMap.Range(func(key, value interface{}) bool {
