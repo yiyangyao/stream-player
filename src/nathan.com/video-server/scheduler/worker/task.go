@@ -1,4 +1,4 @@
-package taskrunner
+package worker
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 )
 
 func deleteVideoFile(videoName string) error {
-	if err := os.Remove("/Users/bytedance/stream-server-player/videos/" + videoName); err != nil {
+	if err := os.Remove(VIDEO_DIR + videoName); err != nil {
 		log.Printf("delete video file error: %v", err)
 		return err
 	}
@@ -56,6 +56,7 @@ forLoop:
 			break forLoop
 		}
 	}
+
 	errMap.Range(func(key, value interface{}) bool {
 		err = value.(error)
 		if err != nil {

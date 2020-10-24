@@ -1,4 +1,4 @@
-package taskrunner
+package worker
 
 type Runner struct {
 	Controller controlChan // 控制信息管道(chan string): make(chan string, 1)

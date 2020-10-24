@@ -1,23 +1,18 @@
 package main
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"net/http"
-	"stream-player/src/nathan.com/video-server/scheduler/taskrunner"
+	"stream-player/src/nathan.com/gee-web/gee"
+	"stream-player/src/nathan.com/video-server/scheduler/worker"
 )
-
-func RegisterHandlers() *httprouter.Router {
-	router := httprouter.New()
-
-	router.POST("/video-delete-record/:vid", videoDeleteHandler)
-
-	return router
-}
 
 func main() {
 	//c := make(chan int)
-	go taskrunner.Start()
-	r := RegisterHandlers()
+	go worker.Start()
+
+	app := gee.Default()
+	clearGroup := app.Group("/clear")
+	clearGroup.POST("/video-delete-record/:vid", videoDeleteHandler)
+
 	//<- c
-	_ = http.ListenAndServe(":9001", r)
+	_ = app.Run(":9001")
 }

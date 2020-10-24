@@ -1,4 +1,4 @@
-package taskrunner
+package worker
 
 import (
 	"time"
@@ -27,6 +27,6 @@ func (w *Worker) startWorker() {
 
 func Start() {
 	r := NewRunner(3, true, VideoClearDispatch, VideoClearExecutor)
-	worker := NewWorker(3, r)
+	worker := NewWorker(20, r)
 	worker.startWorker()
 }
