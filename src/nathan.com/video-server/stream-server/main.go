@@ -5,11 +5,11 @@ import (
 )
 
 func main() {
+	// create gee engine with logger and recover
 	app := gee.Default()
-
-	// create group v2
+	// create group stream
 	streamGroup := app.Group("/stream")
-	// apply middleware for group v2
+	// apply StreamLimiter middleware for group stream
 	streamGroup.Apply(StreamLimiter())
 	{
 		streamGroup.GET("/videos/:video-name", streamHandler)
@@ -17,5 +17,5 @@ func main() {
 		streamGroup.GET("/upload-page", uploadPageHandler)
 	}
 
-	app.Run(":9999")
+	_ = app.Run(":9999")
 }
