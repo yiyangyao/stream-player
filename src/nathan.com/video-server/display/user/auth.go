@@ -1,15 +1,15 @@
-package main
+package user
 
 import (
 	"net/http"
-	"stream-player/src/nathan.com/video-server/api/defs"
-	"stream-player/src/nathan.com/video-server/api/session"
+	"stream-player/src/nathan.com/gee-web/gee"
+	"stream-player/src/nathan.com/video-server/display/session"
 )
 
 var HEADER_FIELD_SESSION = "X-Session-Id"
 var HEADER_FIELD_UNAME = "X-Session-Name"
 
-func vaildateUserSession(r *http.Request) bool {
+func ValidateUserSession(r *http.Request) bool {
 	sid := r.Header.Get(HEADER_FIELD_SESSION)
 	if len(sid) == 0 {
 		return false
@@ -23,10 +23,10 @@ func vaildateUserSession(r *http.Request) bool {
 	return true
 }
 
-func ValidateUser(w http.ResponseWriter, r *http.Request) bool {
-	username := r.Header.Get(HEADER_FIELD_UNAME)
+func ValidateUser(c *gee.Context) bool {
+	username := c.Request.Header.Get(HEADER_FIELD_UNAME)
 	if len(username) == 0 {
-		sendErrorResponse(w, defs.ErrorNotAuthUser)
+		c.SendErrorResponse(403, "user auth failed")
 		return false
 	}
 	return true

@@ -2,8 +2,8 @@ package session
 
 import (
 	"log"
-	"stream-player/src/nathan.com/video-server/api/db"
-	"stream-player/src/nathan.com/video-server/api/defs"
+	"stream-player/src/nathan.com/video-server/display/session/db"
+	"stream-player/src/nathan.com/video-server/display/user/consts"
 	"sync"
 	"time"
 
@@ -22,7 +22,7 @@ func LoadSessionFromDB() {
 		return
 	}
 	r.Range(func(key, value interface{}) bool {
-		ss := value.(*defs.SimpleSession)
+		ss := value.(*consts.SimpleSession)
 		sessionMap.Store(key, ss)
 		return true
 	})
@@ -37,8 +37,8 @@ func CreateNewSessionId(username string) string {
 	}
 	ct := time.Now().UnixNano() / 1000000
 	ttl := ct + 30*60*1000 // 30 min
-	ss := &defs.SimpleSession{UserName: username, TTL: ttl}
-	db.InsertSession(uid.String(), ttl, username)
+	ss := &consts.SimpleSession{UserName: username, TTL: ttl}
+	_ = db.InsertSession(uid.String(), ttl, username)
 	sessionMap.Store(uid, ss)
 	return uid.String()
 }
@@ -47,12 +47,12 @@ func IsSessionExpired(sessionId string) (string, bool) {
 	ss, ok := sessionMap.Load(sessionId)
 	if ok {
 		ct := time.Now().UnixNano() / 1000000
-		if ss.(*defs.SimpleSession).TTL < ct {
+		if ss.(*consts.SimpleSession).TTL < ct {
 			deleteExpiredSession(sessionId)
 			return "", true
 		}
 
-		return ss.(*defs.SimpleSession).UserName, false
+		return ss.(*consts.SimpleSession).UserName, false
 	}
 
 	return "", true

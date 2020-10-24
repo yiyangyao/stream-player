@@ -1,17 +1,18 @@
-package db
+package main
 
 import (
 	"fmt"
 	"strconv"
+	"stream-player/src/nathan.com/video-server/display/util"
 	"testing"
 	"time"
 )
 
 func clearTables() {
-	dbConn.Exec("truncate users")
-	dbConn.Exec("truncate videos")
-	dbConn.Exec("truncate comments")
-	dbConn.Exec("truncate sessions")
+	util.dbConn.Exec("truncate users")
+	util.dbConn.Exec("truncate videos")
+	util.dbConn.Exec("truncate comments")
+	util.dbConn.Exec("truncate sessions")
 }
 
 func TestMain(m *testing.M) {

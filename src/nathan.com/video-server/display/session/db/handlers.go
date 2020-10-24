@@ -4,15 +4,14 @@ import (
 	"database/sql"
 	"log"
 	"strconv"
-	"stream-player/src/nathan.com/video-server/api/defs"
+	"stream-player/src/nathan.com/video-server/display/user/consts"
+	"stream-player/src/nathan.com/video-server/display/util"
 	"sync"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func InsertSession(sessionId string, ttl int64, username string) error {
 	ttlstr := strconv.FormatInt(ttl, 10)
-	stmtIns, err := dbConn.Prepare("INSERT INTO sessions (session_id, ttl, login_name) VALUES (?, ?, ?)")
+	stmtIns, err := util.DBConn.Prepare("INSERT INTO sessions (session_id, ttl, login_name) VALUES (?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -24,21 +23,21 @@ func InsertSession(sessionId string, ttl int64, username string) error {
 	return nil
 }
 
-func RetrieveSession(sessionId string) (*defs.SimpleSession, error) {
-	ss := &defs.SimpleSession{}
-	stmtOut, err := dbConn.Prepare("select session_id, ttl, login_name from sessions where sessionId = ?")
+func RetrieveSession(sessionId string) (*consts.SimpleSession, error) {
+	ss := &consts.SimpleSession{}
+	stmtOut, err := util.DBConn.Prepare("select session_id, ttl, login_name from sessions where sessionId = ?")
 	if err != nil {
 		return nil, err
 	}
 	var ttl string
-	var login_name string
-	err = stmtOut.QueryRow(sessionId).Scan(&ttl, &login_name)
+	var loginName string
+	err = stmtOut.QueryRow(sessionId).Scan(&ttl, &loginName)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 	if res, err := strconv.ParseInt(ttl, 10, 64); err == nil {
 		ss.TTL = res
-		ss.UserName = login_name
+		ss.UserName = loginName
 	} else {
 		return nil, err
 	}
@@ -47,7 +46,7 @@ func RetrieveSession(sessionId string) (*defs.SimpleSession, error) {
 }
 
 func RetrieveAllSessions() (*sync.Map, error) {
-	stmtOut, err := dbConn.Prepare("select session_id, ttl, login_name from sessions")
+	stmtOut, err := util.DBConn.Prepare("select session_id, ttl, login_name from sessions")
 	var sessionMap = &sync.Map{}
 	rows, err := stmtOut.Query()
 	if err != nil {
@@ -60,7 +59,7 @@ func RetrieveAllSessions() (*sync.Map, error) {
 		}
 
 		if ttl, err := strconv.ParseInt(ttl, 10, 64); err == nil {
-			ss := &defs.SimpleSession{
+			ss := &consts.SimpleSession{
 				UserName: loginName, TTL: ttl,
 			}
 			sessionMap.Store(id, ss)
@@ -71,7 +70,7 @@ func RetrieveAllSessions() (*sync.Map, error) {
 }
 
 func DeleteSession(sid string) error {
-	stmtDel, err := dbConn.Prepare("delete from sessions where session_id = ?")
+	stmtDel, err := util.DBConn.Prepare("delete from sessions where session_id = ?")
 	if err != nil {
 		log.Printf("%s", err)
 	}
