@@ -10,6 +10,9 @@ import (
 
 func CreateVideo(c *gee.Context) {
 	username := c.Request.Header.Get(user.HEADER_FIELD_UNAME)
+	if len(username) == 0 {
+		return
+	}
 	userInfo, err := userDB.GetUserCredential(username)
 	if userInfo == nil || err != nil {
 		c.SendErrorResponse(500, "user is not existed")
@@ -31,12 +34,16 @@ func GetVideo(c *gee.Context) {
 }
 
 func DeleteVideo(c *gee.Context) {
+	username := c.Request.Header.Get(user.HEADER_FIELD_UNAME)
+	if len(username) == 0 {
+		return
+	}
 	videoName := c.GetParamValue("video-name")
 	videoInfo, err := videoDB.GetVideoInfo(videoName)
 	if videoInfo == nil || err != nil {
 		c.SendErrorResponse(500, "video is not existed")
 	}
-	if err := videoDB.DeleteVideo; err != nil {
+	if err := videoDB.DeleteVideo(videoName); err != nil {
 		c.SendErrorResponse(500, "delete db failed")
 	}
 	if err := schedulerDB.AddVideoDeletionRecord(videoInfo.VideoId); err != nil {
@@ -47,6 +54,9 @@ func DeleteVideo(c *gee.Context) {
 
 func ListVideos(c *gee.Context) {
 	username := c.Request.Header.Get(user.HEADER_FIELD_UNAME)
+	if len(username) == 0 {
+		return
+	}
 	userInfo, err := userDB.GetUserCredential(username)
 	if userInfo == nil || err != nil {
 		c.SendErrorResponse(500, "user is not existed")

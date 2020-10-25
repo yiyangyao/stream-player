@@ -12,7 +12,7 @@ func main() {
 
 	userGroup := app.Group("/user")
 	{
-		userGroup.POST("/add", user.CreateUser)
+		userGroup.POST("/register", user.CreateUser)
 		userGroup.POST("/login/:username", user.Login)
 	}
 

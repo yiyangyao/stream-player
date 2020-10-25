@@ -24,7 +24,7 @@ func AddNewVideo(authorId int, videoName string) (*consts.VideoInfo, error) {
 }
 
 func GetVideoInfo(name string) (*consts.VideoInfo, error) {
-	stmtOut, err := util.DBConn.Prepare("select video_id, author_id from videos where video_name = ?")
+	stmtOut, err := util.DBConn.Prepare("select id, author_id from videos where video_name = ?")
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func DeleteVideo(name string) error {
 }
 
 func ListVideoInfo(authorId int) ([]*consts.VideoInfo, error) {
-	stmtOut, err := util.DBConn.Prepare("select video_id, video_name from videos where author_id = ?")
+	stmtOut, err := util.DBConn.Prepare("select id, video_name from videos where author_id = ?")
 	if err != nil {
 		return nil, err
 	}

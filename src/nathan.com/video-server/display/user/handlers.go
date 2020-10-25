@@ -22,17 +22,12 @@ func CreateUser(c *gee.Context) {
 		return
 	}
 	if err := db.AddUserCredential(userInfo.UserName, userInfo.PassWord); err != nil {
-		c.SendErrorResponse(500, "DB ops failed")
+		c.SendErrorResponse(500, "insert into db failed")
 		return
 	}
 
 	sessionId := session.CreateNewSessionId(userInfo.UserName)
 	signedUp := &consts.SignedUp{Success: true, SessionId: sessionId}
 
-	if sessionJson, err := json.Marshal(signedUp); err != nil {
-		c.SendErrorResponse(500, "json dump failed")
-		return
-	} else {
-		c.SendJsonResponse(201, sessionJson)
-	}
+	c.SendJsonResponse(201, signedUp)
 }

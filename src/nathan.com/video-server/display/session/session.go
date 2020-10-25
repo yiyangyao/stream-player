@@ -16,6 +16,10 @@ func init() {
 	sessionMap = &sync.Map{}
 }
 
+func init() {
+	LoadSessionFromDB()
+}
+
 func LoadSessionFromDB() {
 	r, err := db.RetrieveAllSessions()
 	if err != nil {

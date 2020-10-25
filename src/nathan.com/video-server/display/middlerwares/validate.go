@@ -13,10 +13,9 @@ func ValidateSession() gee.HandlerFunc {
 
 		if isValidate := user.ValidateUserSession(c.Request); !isValidate {
 			c.SendStringResponse(403, "please login first")
+		} else {
+			c.Next()
 		}
-		// process request
-		c.Next()
-
 		log.Printf("[%d] %s in %v", c.StatusCode, c.Request.RequestURI, time.Since(t))
 	}
 }
