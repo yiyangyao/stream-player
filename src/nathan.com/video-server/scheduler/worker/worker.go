@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"log"
 	"time"
 )
 
@@ -20,6 +21,7 @@ func (w *Worker) startWorker() {
 	for {
 		select {
 		case <-w.ticker.C:
+			log.Printf("clear job will start:%v", time.Now())
 			go w.runner.StartAll()
 		}
 	}
@@ -27,6 +29,6 @@ func (w *Worker) startWorker() {
 
 func Start() {
 	r := NewRunner(3, true, VideoClearDispatch, VideoClearExecutor)
-	worker := NewWorker(20, r)
+	worker := NewWorker(10, r)
 	worker.startWorker()
 }

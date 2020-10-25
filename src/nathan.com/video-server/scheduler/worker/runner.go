@@ -60,6 +60,10 @@ func (r *Runner) startDispatch() {
 }
 
 func (r *Runner) StartAll() {
+	//if _, isOpen := <- r.Controller; !isOpen {
+	//	log.Printf("task chan has been closed")
+	//	return
+	//}
 	r.Controller <- READY_TO_DISPATCH
 	r.startDispatch()
 }

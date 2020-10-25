@@ -12,6 +12,6 @@ const (
 )
 
 // 每次读取数据的条数
-const LOAD_VIDEO_RECORD_BUFFER int = 10
+const LOAD_VIDEO_RECORD_BUFFER int = 3
 
 const VIDEO_DIR string = "/Users/bytedance/stream-player/src/nathan.com/video-server/stream-server/sources/videos/"

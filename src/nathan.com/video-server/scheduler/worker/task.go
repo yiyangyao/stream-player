@@ -51,6 +51,7 @@ forLoop:
 					errMap.Store(videoName, err)
 					return
 				}
+				return
 			}(videoName)
 		default:
 			break forLoop

@@ -32,25 +32,25 @@ func AddVideoDeletionRecord(vid int) error {
 func ReadVideoDeletionRecord(count int) ([]string, error) {
 	stmtOut, err := dbConn.Prepare("select video_name from video_to_be_deleted limit ?")
 
-	var names []string
-
 	if err != nil {
-		return names, err
+		return nil, err
 	}
 
 	rows, err := stmtOut.Query(count)
 	if err != nil {
 		log.Printf("Query VideoDeletionRecord err: %v", err)
-		return names, err
+		return nil, err
 	}
 
+	var names []string
 	for rows.Next() {
 		var videoName string
 		if err := rows.Scan(&videoName); err != nil {
-			return names, err
+			return nil, err
 		}
-
-		names = append(names, videoName)
+		if len(videoName) != 0 {
+			names = append(names, videoName)
+		}
 	}
 
 	defer stmtOut.Close()
