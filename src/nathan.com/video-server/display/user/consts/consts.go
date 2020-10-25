@@ -2,6 +2,7 @@ package consts
 
 // request
 type UserCredential struct {
+	UserID   int    `json:"id"`
 	UserName string `json:"username"`
 	PassWord string `json:"password"`
 }

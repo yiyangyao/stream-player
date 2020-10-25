@@ -11,7 +11,9 @@ func ValidateSession() gee.HandlerFunc {
 	return func(c *gee.Context) {
 		t := time.Now()
 
-		user.ValidateUserSession(c.Request)
+		if isValidate := user.ValidateUserSession(c.Request); !isValidate {
+			c.SendStringResponse(403, "please login first")
+		}
 		// process request
 		c.Next()
 

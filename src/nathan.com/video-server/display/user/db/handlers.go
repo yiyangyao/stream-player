@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
+	"stream-player/src/nathan.com/video-server/display/user/consts"
 	"stream-player/src/nathan.com/video-server/display/util"
 )
 
@@ -19,19 +20,26 @@ func AddUserCredential(username string, password string) error {
 	return nil
 }
 
-func GetUserCredential(username string) (string, error) {
-	stmtOut, err := util.DBConn.Prepare("select passwd from users where username = ?")
+func GetUserCredential(username string) (*consts.UserCredential, error) {
+	stmtOut, err := util.DBConn.Prepare("select id, passwd from users where username = ?")
 	if err != nil {
 		log.Printf("%s", err)
 	}
+	var userId int
 	var password string
-	err = stmtOut.QueryRow(username).Scan(&password)
+	err = stmtOut.QueryRow(username).Scan(&userId, &password)
 	if err != nil && err != sql.ErrNoRows {
-		return "", err
+		return nil, err
 	}
 	defer stmtOut.Close()
 
-	return password, nil
+	userInfo := &consts.UserCredential{
+		UserID:   userId,
+		UserName: username,
+		PassWord: password,
+	}
+
+	return userInfo, nil
 }
 
 func DeleteUser(username string, password string) error {

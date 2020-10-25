@@ -50,6 +50,7 @@ func uploadHandler(c *gee.Context) {
 		c.SendErrorResponse(http.StatusInternalServerError, "internal server error: write file content error")
 		return
 	}
+
 	c.SendStringResponse(http.StatusCreated, "upload successfully")
 }
 
