@@ -99,7 +99,7 @@ func (r *Router) getRouter(method string, path string) (*node, map[string]string
 	- c.Params(map): 将动态路径参数放入map
 	- c.handlers(array): 从node中找到匹配的路径，在router的路径map中找到对应的处理函数，放入context中的handlers数组中
 */
-func (r *Router) handler(c *Context) {
+func (r *Router) handle(c *Context) {
 	node, params := r.getRouter(c.Method, c.Path)
 
 	if node != nil {

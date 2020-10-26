@@ -2,9 +2,16 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"stream-player/src/nathan.com/gee-web/gee"
+	"time"
 )
+
+func FormatAsDate(t time.Time) string {
+	year, month, day := t.Date()
+	return fmt.Sprintf("%d-%02d-%02d", year, month, day)
+}
 
 func main() {
 	//app := gee.New()
@@ -13,9 +20,9 @@ func main() {
 	//app.Apply(gee.Logger())
 
 	// add global router
-	app.GET("/index", func(c *gee.Context) {
-		c.SendHTMLResponse(http.StatusOK, "<h1>Index Page</h1>")
-	})
+	//app.GET("/index", func(c *gee.Context) {
+	//	c.SendHTMLResponse(http.StatusOK, "<h1>Index Page</h1>")
+	//})
 
 	// panic
 	app.GET("/panic", func(c *gee.Context) {
@@ -55,6 +62,22 @@ func main() {
 			c.SendJsonResponse(http.StatusOK, gee.H{"filepath": c.GetParamValue("filepath")})
 		})
 	}
+
+	/**
+	用户访问localhost:9999/assets/js/nathan.js，最终返回/usr/blog/static/js/nathan.js
+	*/
+	app.Static("/assets", "/usr/blog/static")
+	// 或相对路径 r.Static("/assets", "./static")
+
+	app.SetFuncMap(template.FuncMap{
+		"FormatAsDate": FormatAsDate,
+	})
+	app.LoadHTMLGlob("templates/*")
+	app.Static("/assets", "./static")
+
+	app.GET("/", func(c *gee.Context) {
+		c.SendHTMLResponse(http.StatusOK, "css.tmpl", nil)
+	})
 
 	app.Run(":9999")
 }

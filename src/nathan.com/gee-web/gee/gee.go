@@ -1,6 +1,7 @@
 package gee
 
 import (
+	"html/template"
 	"net/http"
 	"strings"
 )
@@ -14,9 +15,11 @@ type HandlerFunc func(*Context)
 - Engine：web应用的入口，全局唯一
 */
 type Engine struct {
-	router       *Router        // 该app下的路由规则和前缀树
-	groups       []*RouterGroup // 改engine下所包含的所有分组
-	*RouterGroup                // 继承RouterGroup，engine作为子类，拥有更多的方法和属性
+	router        *Router            // 该app下的路由规则和前缀树
+	groups        []*RouterGroup     // 改engine下所包含的所有分组
+	*RouterGroup                     // 继承RouterGroup，engine作为子类，拥有更多的方法和属性
+	htmlTemplates *template.Template // for html render，将所有的模板加载进内存
+	funcMap       template.FuncMap   // for html render，所有的自定义模板渲染函数
 }
 
 func Default() *Engine {
@@ -63,5 +66,14 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	c := newContext(w, r)
 	c.handlers = middlewares
-	engine.router.handler(c)
+	c.engine = engine
+	engine.router.handle(c)
+}
+
+func (engine *Engine) SetFuncMap(funcMap template.FuncMap) {
+	engine.funcMap = funcMap
+}
+
+func (engine *Engine) LoadHTMLGlob(pattern string) {
+	engine.htmlTemplates = template.Must(template.New("").Funcs(engine.funcMap).ParseGlob(pattern))
 }

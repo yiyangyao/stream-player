@@ -22,6 +22,7 @@ type Context struct {
 	Params       map[string]string
 	handlers     []HandlerFunc // middlewares + handlers
 	index        int
+	engine       *Engine
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -71,10 +72,12 @@ func (c *Context) SendJsonResponse(code int, object interface{}) {
 	}
 }
 
-func (c *Context) SendHTMLResponse(code int, html string) {
+func (c *Context) SendHTMLResponse(code int, htmlFileName string, data interface{}) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
-	_, _ = c.Response.Write([]byte(html))
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Response, htmlFileName, data); err != nil {
+		c.Fail(500, err.Error())
+	}
 }
 
 func (c *Context) SendErrorResponse(code int, errMsg string) {

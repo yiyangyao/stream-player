@@ -1,5 +1,10 @@
 package gee
 
+import (
+	"net/http"
+	"path"
+)
+
 /**
 为路由router提供分组控制，以相同的前缀来区分不同的分组
 */
@@ -29,6 +34,27 @@ func (group *RouterGroup) GET(pattern string, handler HandlerFunc) {
 
 func (group *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	group.addRouterRule("POST", pattern, handler)
+}
+
+func (group *RouterGroup) Static(pattern string, root string) {
+	staticHandler := group.createStaticHandler(pattern, http.Dir(root))
+	urlPattern := path.Join(pattern, "/*filepath")
+	group.GET(urlPattern, staticHandler)
+}
+
+func (group *RouterGroup) createStaticHandler(pattern string, fs http.FileSystem) HandlerFunc {
+	groupPath := path.Join(group.prefix, pattern)
+	fileServer := http.StripPrefix(groupPath, http.FileServer(fs))
+	return func(c *Context) {
+		file := c.GetParamValue("filepath")
+		// Check if file exists and/or if we have permission to access it
+		if _, err := fs.Open(file); err != nil {
+			c.Status(http.StatusNotFound)
+			return
+		}
+
+		fileServer.ServeHTTP(c.Response, c.Request)
+	}
 }
 
 /**
