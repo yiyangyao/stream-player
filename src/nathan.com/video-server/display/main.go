@@ -32,5 +32,5 @@ func main() {
 		commentGroup.POST("/add", comment.PostComment)
 	}
 
-	_ = app.Run(":9000")
+	_ = app.Run(":8000")
 }

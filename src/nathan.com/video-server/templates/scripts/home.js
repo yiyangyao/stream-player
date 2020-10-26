@@ -364,7 +364,7 @@ function registerUser(callback) {
     }
 
     var dat = {
-        'url': 'http://'+ window.location.hostname + ':8000/user',
+        'url': 'http://'+ window.location.hostname + ':8000/user/register',
         'method': 'POST',
         'req_body': JSON.stringify(reqBody)
     };
@@ -413,7 +413,7 @@ function signinUser(callback) {
     }
 
     var dat = {
-        'url': 'http://'+ window.location.hostname + ':8000/user/' + username,
+        'url': 'http://'+ window.location.hostname + ':8000/user/login/' + username,
         'method': 'POST',
         'req_body': JSON.stringify(reqBody)
     };
