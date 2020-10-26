@@ -1,9 +1,12 @@
 package db
 
-import "stream-player/src/nathan.com/video-server/display/consts"
+import (
+	"stream-player/src/nathan.com/video-server/display/comment/consts"
+	"stream-player/src/nathan.com/video-server/display/util"
+)
 
 func AddNewComment(vid int, aid int, content string) error {
-	stmtIns, err := util.dbConn.Prepare("insert into comments (video_id, author_id, content) VALUES (?, ?, ?)")
+	stmtIns, err := util.DBConn.Prepare("insert into comments (video_id, author_id, content) VALUES (?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -16,28 +19,35 @@ func AddNewComment(vid int, aid int, content string) error {
 	return nil
 }
 
-func listComments(vid int, from, to int) ([]*consts.CommentInfo, error) {
-	stmtOut, err := util.dbConn.Prepare(`select comments.id, users.username, comments.content
+func ListVideoComments(vid, from, to int) ([]*consts.CommentInfo, error) {
+	stmtOut, err := util.DBConn.Prepare(
+		`select comments.id, comments.author_id, comments.content, comments.create_time, users.username
 		from comments inner join users on comments.author_id = users.id 
-		where comments.video_id = ? and comments.create_time in (from_unixtime(?), from_unixtime(?))`)
-	var res []*consts.CommentInfo
+		where 
+		comments.video_id = ? and 
+		comments.create_time >= from_unixtime(?) and 
+		comments.create_time <= from_unixtime(?)`)
+	var videoComments []*consts.CommentInfo
 	rows, err := stmtOut.Query(vid, from, to)
 	if err != nil {
-		return res, err
+		return nil, err
 	}
 	for rows.Next() {
-		var vid int
-		var name, content string
-		if err := rows.Scan(&vid, &name, &content); err != nil {
-			return res, err
+		var commentId, authorId int
+		var createTime, content, userName string
+		if err := rows.Scan(&commentId, &authorId, &createTime, &content, &userName); err != nil {
+			return videoComments, err
 		}
 		c := &consts.CommentInfo{
-			VideoId:    vid,
-			AuthorName: name,
-			Content:    content,
+			CommentId:   commentId,
+			VideoId:     vid,
+			AuthorId:    authorId,
+			AuthorName:  userName,
+			Content:     content,
+			CommentTime: createTime,
 		}
-		res = append(res, c)
+		videoComments = append(videoComments, c)
 	}
 	defer stmtOut.Close()
-	return res, nil
+	return videoComments, nil
 }

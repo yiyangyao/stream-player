@@ -2,6 +2,7 @@ package main
 
 import (
 	"stream-player/src/nathan.com/gee-web/gee"
+	"stream-player/src/nathan.com/video-server/display/comment"
 	"stream-player/src/nathan.com/video-server/display/middlerwares"
 	"stream-player/src/nathan.com/video-server/display/user"
 	"stream-player/src/nathan.com/video-server/display/video"
@@ -23,6 +24,12 @@ func main() {
 		videoGroup.POST("/delete/:video-name", video.DeleteVideo)
 		videoGroup.GET("/detail", video.GetVideo)
 		videoGroup.GET("/list", video.ListVideos)
+	}
+
+	commentGroup := app.Group("/comment")
+	{
+		commentGroup.GET("/list", comment.ListComments)
+		commentGroup.POST("/add", comment.PostComment)
 	}
 
 	_ = app.Run(":9000")
