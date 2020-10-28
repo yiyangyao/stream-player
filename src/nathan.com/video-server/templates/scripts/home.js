@@ -68,7 +68,7 @@ $(document).ready(function() {
         registerUser(function(res, err) {
             if (err != null) {
                 $('#regbtn').text("Register")
-                popupErrorMsg('encounter an error, pls check your username or pwd');
+                popupErrorMsg('encounter an error, pls check your username or password');
                 return;
             }
 
@@ -86,8 +86,8 @@ $(document).ready(function() {
         signinUser(function(res, err) {
             if (err != null) {
                 $('#signinbtn').text("Sign In");
-                //window.alert('encounter an error, pls check your username or pwd')
-                popupErrorMsg('encounter an error, pls check your username or pwd');
+                //window.alert('encounter an error, pls check your username or password')
+                popupErrorMsg('encounter an error, pls check your username or password');
                 return;
             }
 
@@ -190,8 +190,8 @@ function initPage(callback) {
         //window.alert(obj['id']);
         listAllVideos(function(res, err) {
             if (err != null) {
-                //window.alert('encounter an error, pls check your username or pwd');
-                popupErrorMsg('encounter an error, pls check your username or pwd');
+                //window.alert('encounter an error, pls check your username or password');
+                popupErrorMsg('encounter an error, pls check your username or password');
                 return;
             }
             var obj = JSON.parse(res);
@@ -351,16 +351,16 @@ function htmlVideoListElement(vid, name, ctime) {
 // User operations
 function registerUser(callback) {
     var username = $("#username").val();
-    var pwd = $("#pwd").val();
+    var password = $("#password").val();
     var apiUrl = window.location.hostname + ':8080/api';
 
-    if (username == '' || pwd == '') {
+    if (username == '' || password == '') {
         callback(null, err);
     }
 
     var reqBody = {
-        'user_name': username,
-        'pwd': pwd
+        'username': username,
+        'password': password
     }
 
     var dat = {
@@ -400,16 +400,16 @@ function registerUser(callback) {
 
 function signinUser(callback) {
     var username = $("#susername").val();
-    var pwd = $("#spwd").val();
+    var password = $("#spassword").val();
     var apiUrl = window.location.hostname + ':8080/api';
 
-    if (username == '' || pwd == '') {
+    if (username == '' || password == '') {
         callback(null, err);
     }
 
     var reqBody = {
-        'user_name': username,
-        'pwd': pwd
+        'username': username,
+        'password': password
     }
 
     var dat = {
@@ -446,7 +446,7 @@ function signinUser(callback) {
 
 function getUserId(callback) {
     var dat = {
-        'url': 'http://' + window.location.hostname + ':8000/user/' + uname,
+        'url': 'http://' + window.location.hostname + ':8000/user/login/' + uname,
         'method': 'GET'
     };
 

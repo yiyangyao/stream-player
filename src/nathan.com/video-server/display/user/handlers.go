@@ -11,7 +11,18 @@ import (
 
 func Login(c *gee.Context) {
 	username := c.GetParamValue("username")
-	c.SendStringResponse(200, username)
+	body, _ := ioutil.ReadAll(c.Request.Body)
+	userLoginInfo := &consts.UserCredential{}
+	if err := json.Unmarshal(body, userLoginInfo); err != nil {
+
+	}
+
+	sessionId := session.CreateNewSessionId(username)
+	signedIn := &consts.SignedUp{
+		Success:   true,
+		SessionId: sessionId,
+	}
+	c.SendJsonResponse(200, signedIn)
 }
 
 func CreateUser(c *gee.Context) {
